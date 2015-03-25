@@ -39,5 +39,5 @@ script:
   # Test
   - "[ \"$(docker run $IMAGE_NAME)\" == 'This is a secret !' ]; echo $?"
   # Publish
-  - "if [ -n $HUB_USERNAME ]; then for IMAGE_TAG in $IMAGE_TAGS; do docker build -t $HUB_USERNAME/$IMAGE_NAME:$IMAGE_TAG .; docker push $HUB_USERNAME/$IMAGE_NAME:$IMAGE_TAG done fi"
+  - "if [ -n $HUB_USERNAME ]; then for IMAGE_TAG in $IMAGE_TAGS; do docker build -t $HUB_USERNAME/$IMAGE_NAME:$IMAGE_TAG .; docker push $HUB_USERNAME/$IMAGE_NAME:$IMAGE_TAG; done; fi"
 
