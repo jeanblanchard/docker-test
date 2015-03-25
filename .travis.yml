@@ -1,11 +1,12 @@
 language: c
 
 env:
-  global:
-    - "HOST_IP=$(/sbin/ifconfig venet0:0 | grep 'inet addr' | awk -F: '{print $2}' | awk '{print $1}')"
-    - DOCKER_HOST=tcp://$HOST_IP:2375
-    - DOCKER_PORT_RANGE=2400:2500
-    - SLIRP_PORTS=$(seq 2375 2500)
+  - IMAGE_NAME=test
+  - IMAGE_TAGS="latest 1.0"
+  - "HOST_IP=$(/sbin/ifconfig venet0:0 | grep 'inet addr' | awk -F: '{print $2}' | awk '{print $1}')"
+  - DOCKER_HOST=tcp://$HOST_IP:2375
+  - DOCKER_PORT_RANGE=2400:2500
+  - SLIRP_PORTS=$(seq 2375 2500)
 
 before_install:
   - sudo sh -c "wget -qO- https://get.docker.io/gpg | apt-key add -"
@@ -32,9 +33,9 @@ after_script:
 
 script:
   # Build
-  - docker build -t jbtest/test .
+  - docker build -t $IMAGE_NAME .
   # Test
-  - "[ \"$(docker run jbtest/test)\" == 'This is a secret !' ]; echo $?"
+  - "[ \"$(docker run $IMAGE_NAME)\" == 'This is a secret !' ]; echo $?"
   # Publish
-  - "if [ -n $HUB_USERNAME ]; then docker push jbtest/test; fi"
+  - "if [ -n $HUB_USERNAME ]; then for IMAGE_TAG in $IMAGE_TAGS; do docker build -t $HUB_USERNAME/$IMAGE_NAME:$IMAGE_TAG .; docker push $HUB_USERNAME/$IMAGE_NAME:$IMAGE_TAG done fi"
 
