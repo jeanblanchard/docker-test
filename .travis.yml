@@ -26,4 +26,4 @@ before_script:
 script:
   - docker version
   - docker build -t dockertest .
-  - docker run dockertest
+  - docker run -it dockertest
