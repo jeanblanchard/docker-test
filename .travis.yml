@@ -32,9 +32,9 @@ after_script:
 
 script:
   # Build
-  - docker build -t dockertest .
+  - docker build -t jbtest/test .
   # Test
-  - "[ \"$(docker run dockertest)\" == 'This is a secret !' ]; echo $?"
+  - "[ \"$(docker run jbtest/test)\" == 'This is a secret !' ]; echo $?"
   # Publish
   - "if [ -n $HUB_USERNAME ]; then docker push jbtest/test; fi"
 
