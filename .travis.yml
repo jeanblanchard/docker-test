@@ -28,12 +28,12 @@ before_script:
   - "while ! docker info &> /dev/null ; do sleep 1; done"
   - docker version
   # Log in to Docker Hub
-  - "if [ $TRAVIS_PULL_REQUEST != false ] && [ $TRAVIS_BRANCH == $PUBLISH_IF_BRANCH ] && [ -n \"$HUB_USERNAME\" ]; then PUBLISH_IMAGE=true; else PUBLISH_IMAGE=false; fi"
+  - "if [ $TRAVIS_PULL_REQUEST != false ] && [ $TRAVIS_BRANCH == $PUBLISH_IF_BRANCH ] && [ -n \"$HUB_USERNAME\" ]; then PUBLISH_IMAGE=true; echo 'Publishing!'; else PUBLISH_IMAGE=false; echo 'Not publishing!' fi"
   - "if [ $PUBLISH_IMAGE = true ]; then docker login -u $HUB_USERNAME -p $HUB_PASSWORD -e $HUB_EMAIL; fi"
 
 after_script:
   # Log out from Docker Hub
-  - "if [ -n $PUBLISH_IMAGE = true ]; then docker logout; fi"
+  - "if [ $PUBLISH_IMAGE = true ]; then docker logout; fi"
 
 script:
   # Build
@@ -41,5 +41,5 @@ script:
   # Test
   - "[ \"$(docker run $IMAGE_NAME)\" == 'This is a secret !' ]; echo $?"
   # Publish
-  - "if [ -n $PUBLISH_IMAGE = true ]; then for IMAGE_TAG in $IMAGE_TAGS; do docker build -t $HUB_USERNAME/$IMAGE_NAME:$IMAGE_TAG .; docker push $HUB_USERNAME/$IMAGE_NAME:$IMAGE_TAG; done; fi"
+  - "if [ $PUBLISH_IMAGE = true ]; then for IMAGE_TAG in $IMAGE_TAGS; do docker build -t $HUB_USERNAME/$IMAGE_NAME:$IMAGE_TAG .; docker push $HUB_USERNAME/$IMAGE_NAME:$IMAGE_TAG; done; fi"
 
