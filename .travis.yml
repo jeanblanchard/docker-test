@@ -28,7 +28,7 @@ before_script:
   - "while ! docker info &> /dev/null ; do sleep 1; done"
   - docker version
   # Log in to Docker Hub
-  - "if [ $TRAVIS_PULL_REQUEST != false ] && [ $TRAVIS_BRANCH == $PUBLISH_IF_BRANCH ] && [ -n \"$HUB_USERNAME\" ]; then PUBLISH_IMAGE=true; echo 'Publishing!'; else PUBLISH_IMAGE=false; echo 'Not publishing!' fi"
+  - "if [ ! $TRAVIS_PULL_REQUEST = false ] && [ $TRAVIS_BRANCH = $PUBLISH_IF_BRANCH ] && [ -n \"$HUB_USERNAME\" ] && [ -n \"$HUB_PASSWORD\" ]; then PUBLISH_IMAGE=true; echo 'Publishing!'; else PUBLISH_IMAGE=false; echo 'Not publishing!'; fi"
   - "if [ $PUBLISH_IMAGE = true ]; then docker login -u $HUB_USERNAME -p $HUB_PASSWORD -e $HUB_EMAIL; fi"
 
 after_script:
